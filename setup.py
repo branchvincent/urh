@@ -9,7 +9,7 @@ if sys.version_info < (3, 9):
     sys.exit(1)
 
 try:
-    from setuptools import setup, Extension
+    from setuptools import Extension, setup
     from setuptools.command.build_ext import build_ext as _build_ext
 except ImportError:
     print("Could not find setuptools")
@@ -18,7 +18,6 @@ except ImportError:
 
 from src.urh.dev.native import ExtensionHelper
 from src.urh.dev.native.ExtensionHelper import COMPILER_DIRECTIVES
-import src.urh.version as version
 
 if sys.platform == "win32":
     OPEN_MP_FLAG = "/openmp"
@@ -71,19 +70,6 @@ class build_ext(_build_ext):
         self.include_dirs.append(numpy.get_include())
 
 
-def get_packages():
-    packages = [URH_DIR]
-    separator = os.path.normpath("/")
-    for dirpath, dirnames, filenames in os.walk(os.path.join("./src/", URH_DIR)):
-        package_path = os.path.relpath(
-            dirpath, os.path.join("./src/", URH_DIR)
-        ).replace(separator, ".")
-        if len(package_path) > 1:
-            packages.append(URH_DIR + "." + package_path)
-
-    return packages
-
-
 def get_package_data():
     package_data = {"urh.cythonext": ["*.pyx", "*.pxd"]}
     for plugin in PLUGINS:
@@ -133,15 +119,6 @@ def get_extensions():
     return extensions
 
 
-def read_long_description():
-    try:
-        with open("README.md") as f:
-            text = f.read()
-        return text
-    except:
-        return ""
-
-
 install_requires = ["numpy>=2.0,<3.0", "psutil", "cython<3.1", "setuptools"]
 if IS_RELEASE:
     install_requires.append("pyqt5")
@@ -152,29 +129,8 @@ else:
         install_requires.append("pyqt5")
 
 setup(
-    name="urh",
-    version=version.VERSION,
-    description="Universal Radio Hacker: investigate wireless protocols like a boss",
-    long_description=read_long_description(),
-    long_description_content_type="text/markdown",
-    author="Johannes Pohl",
-    author_email="Johannes.Pohl90@gmail.com",
-    package_dir={"": "src"},
     package_data=get_package_data(),
-    url="https://github.com/jopohl/urh",
-    license="GNU General Public License (GPL)",
-    download_url="https://github.com/jopohl/urh/tarball/v" + str(version.VERSION),
     install_requires=install_requires,
-    setup_requires=["numpy>=2.0,<3.0"],
-    python_requires=">=3.9",
-    packages=get_packages(),
     ext_modules=get_extensions(),
     cmdclass={"build_ext": build_ext},
-    zip_safe=False,
-    entry_points={
-        "console_scripts": [
-            "urh = urh.main:main",
-            "urh_cli = urh.cli.urh_cli:main",
-        ]
-    },
 )

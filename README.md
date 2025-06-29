@@ -95,12 +95,11 @@ Note, before first usage the C++ extensions will be built.
 
 #### Installing from source
 
-To install URH from source you need to have ```python-setuptools``` installed. You can get them with ```python3 -m pip install setuptools```. 
-Once the setuptools are installed execute: 
+To install URH from source:
 ```commandline
 git clone https://github.com/jopohl/urh/
 cd urh
-python setup.py install
+python3 -m pip install .
 ```
 
 And start the application by typing ```urh``` in a terminal.
