@@ -27,7 +27,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
  \
  && cd /tmp && git clone --depth=1 https://github.com/jopohl/urh \
  && cd /tmp/urh \
- && python3 setup.py install \
+ && python3 -m pip install . \
  && rm -rf /tmp/urh \
  \
  && apt-get -qq remove wget gcc g++ git ttf-bitstream-vera \

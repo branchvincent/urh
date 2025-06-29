@@ -52,7 +52,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install wheel
+          pip install build
           pip install -r data/requirements.txt
           if [[ $OS == ubuntu* ]]
           then
@@ -91,9 +91,9 @@ jobs:
 
       - name: Create sdist
         if: ${{ startsWith(matrix.os, 'ubuntu') && matrix.python-version == '3.12' }}
-        run: python setup.py sdist
+        run: python -m build --sdist
 
-      - run: python setup.py bdist_wheel
+      - run: python -m build --wheel
         if: ${{ !startsWith(matrix.os, 'ubuntu') }}
 
       - name: Build manylinux wheels
